@@ -1,6 +1,6 @@
 /* 
 
-   $Id: tree.h,v 1.1 2004/03/27 13:56:01 davi Exp $
+   $Id: tree.h,v 1.2 2004/06/16 16:38:54 braga Exp $
 
    STL-like templated tree class.
    Copyright (C) 2001  Kasper Peeters <k.peeters@damtp.cam.ac.uk>

@@ -2,39 +2,92 @@
 #include <cctype>
 #include <regexx.hh>
 #include <strstream>
+#include <iconv.h>
+#include "Uri.h"
+
 #include "utils.h"
 
 using namespace std;
 namespace htmlcxx {
 	namespace HTML {
 
-		string single_blank(const string &str) {
+		bool detect_utf8(const char *begin, int size)
+		{
+			const char *ptr;
+			const char *end = begin+size;
+			const char *signature = "﻿";
+			char previous_byte = 0;
+			unsigned count_bad_utf = 0;
+			unsigned count_good_utf = 0;
 
-			string ret;	
-			uint i;
-			ret.reserve(str.length());
-
-			// Skip space in the beginning
-			i = 0;
-			while (isspace(str[i])) ++i;
-
-			uint length = str.length();
-			uint last_is_ispace = false;
-			for(; i < length; ++i) {
-				if(isspace(str[i])) {
-					if(last_is_ispace) continue;
-					last_is_ispace = true;
-				} else {
-					if (last_is_ispace) ret += " ";
-					last_is_ispace = false;
-					ret += str[i];
+			if (!strncmp(begin, signature, 3)) return true;
+			
+			for (ptr = begin; ptr != end; ++ptr)
+			{
+				if ((*ptr & 0xC0) == 0x80)
+				{
+					if ((previous_byte & 0xC0) == 0xC0)
+					{
+						count_good_utf ++;
+					}
+					else if ((previous_byte & 0x80) == 0x00)
+					{
+						count_bad_utf ++;
+					}
 				}
+				else if ((previous_byte & 0xC0) == 0xC0)
+				{
+					count_bad_utf ++;
+				}
+
+				previous_byte = *ptr;
 			}
 
-			ret.resize(ret.size());
+			return count_good_utf > count_bad_utf;
+		}
+
+		string single_blank(const string &str) {
+
+			uint count = 0;
+			bool first_space = true;
+			const char *ptr = str.c_str();
+
+			string ret(str.length(), ' ');
+			
+			// Skip space at beginning
+			while (isspace(*ptr)) ++ptr;
+			
+			while (*ptr)
+			{
+				if (isspace(*ptr))
+				{
+					if (first_space)
+					{
+						first_space = false;
+						ret[count++] = ' ';
+					}
+				}
+				else
+				{
+					first_space = true;
+					ret[count++] = *ptr;
+				}
+				
+				++ptr;
+			}
+
+			// Trim space at the end
+			string::size_type a;
+			a = ret.find_last_not_of(' ', count);
+			if (a != string::npos)
+				ret.erase(a+1);
+			else
+			{
+				a = 0;
+				ret.erase(a);
+			}
 
 			return ret;
-
 		}
 
 		string strip_comments(const string &str) {
@@ -72,11 +125,9 @@ namespace htmlcxx {
 
 		}
 
-
-
 		static struct {
 			char *str;
-			char chr;
+			unsigned char chr;
 		} entities[] = {
 			/* 00 */
 			{ "quot", 34 },
@@ -192,46 +243,67 @@ namespace htmlcxx {
 			{ NULL, 0 },
 		};
 
-		string decode_entities(const string &s) {
+		string decode_entities(const string &str)
+		{
+			uint count = 0;
+			const char *ptr = str.c_str();
+			const char *end;
 
-			string str(s);
-			size_t init = 0;
-			size_t end = 0;
+			string ret(str);
 			string entity;
 
-			//		printf("url_init: %s\n", str.c_str());
-			while (1) {
+			ptr = strchr(ptr, '&');
+			if (ptr == NULL) return ret;
 
-				init = str.find("&", end);
-				if (init == string::npos) break;
-				end = str.find(";", init);
-				if (end == string::npos) break;
+			count += ptr - str.c_str();
 
-				entity = str.substr(init + 1, end - init - 1);
-				//			printf("entity: %s\n", entity.c_str());
-				if (!entity.empty() && entity[0] == '#') {
-					entity.erase(0, 1);
-					unsigned char chr = atoi(entity.c_str());
-					if (chr != 0) {
-						str.replace(init, end - init + 1, string(1, chr));
-						end = init+1;
-					} else {
-						str.replace(init, end - init + 1, string(""));
-						end = init;
+//			printf("url_init: %s\n", str.c_str());
+			while (*ptr)
+			{
+				if (*ptr == '&' && ((end = strchr(ptr, ';')) != NULL))
+				{
+					entity.assign(ptr + 1, end);
+//					printf("Entity: %d %s\n", entity.length(), entity.c_str());
+					if (!entity.empty() && entity[0] == '#')
+					{
+						entity.erase(0, 1);
+						unsigned char chr = atoi(entity.c_str());
+						if (chr != 0)
+						{
+							ret[count++] = chr;
+						}
+						ptr = end + 1;
 					}
-				} else {
-					for (int i = 0; entities[i].str != NULL; i++) {
-						if (entity == entities[i].str) {
-							str.replace(init, end - init + 1, string(1, entities[i].chr));
-							end = init+1;
-							break;
+					else
+					{
+						bool found = false;
+						for (int i = 0; entities[i].str != NULL; i++)
+						{
+							if (entity == entities[i].str)
+							{
+								found = true;
+								ret[count++] = entities[i].chr;
+								ptr = end + 1;
+								break;
+							}
+						}
+
+						if (!found)
+						{
+							ret[count++] = *ptr++;
 						}
 					}
 				}
+				else
+				{
+					ret[count++] = *ptr++;
+				}
 			}
 
-			//		printf("url_end: %s\n", str.c_str());
-			return str;
+			ret.erase(count);
+
+//			printf("url_end: %s\n", ret.c_str());
+			return ret;
 		}
 
 		string get_attribute(const string& tag, const string& attr) {
@@ -273,73 +345,167 @@ namespace htmlcxx {
 			return val;
 		}
 
-		string convert_link(const string& relative, const string& root) {
+		string normalize_slashs(const string &url)
+		{
+			const int NONE = 0;
+			const int LASTSLASH = 1;
+			const int LASTDOTSLASH = 2;
+			const int LASTDOTDOTSLASH = 3;
+			int state = NONE;
+			const char *question_dash;
+			const char *question;
+			const char *dash;
+			int count = 0;
+			const char *ptr = url.c_str();
+			string ret(url);
 
+			question = strchr(ptr, '?');
+			dash = strchr(ptr, '#');
+			if (question &&(!dash || question < dash)) question_dash = question;
+			else question_dash = dash;
+			if (question_dash == 0) question_dash = url.c_str() + url.length();
+
+			const char *problem;
+			const char *problem1 = strstr(ptr, "//");
+			const char *problem2 = strstr(ptr, "/.");
+
+			if (problem1 && (!problem2 || problem1 < problem2)) problem = problem1;
+			else problem = problem2;
+
+			if (problem && problem < question_dash)
+			{
+				ptr = problem;
+				count = ptr - url.c_str();
+				while (*ptr && ptr < question_dash)
+				{
+					switch (state)
+					{
+						case LASTSLASH:
+							if (*ptr == '/')
+							{
+								++ptr;
+								state = LASTSLASH;
+							}
+							else if (*ptr == '.')
+							{
+								++ptr;
+								state = LASTDOTSLASH;
+							}
+							else
+							{
+								ret[count++] = *ptr;
+								++ptr;
+								state = NONE;
+							}
+							break;
+						case LASTDOTSLASH:
+							if (*ptr == '/')
+							{
+								++ptr;
+								state = LASTSLASH;
+							}
+							else if (*ptr == '.')
+							{
+								++ptr;
+								state = LASTDOTDOTSLASH;
+							}
+							else
+							{
+								ret[count++] = '.';
+								ret[count++] = *ptr;
+								++ptr;
+								state = NONE;
+							}
+							break;
+						case LASTDOTDOTSLASH:
+							if (*ptr == '/')
+							{
+								const char *last_slash = ret.c_str() + count - 2;
+								while (last_slash >= ret.c_str() && *last_slash != '/')
+									--last_slash;
+								if (last_slash >= ret.c_str())
+									count = last_slash - ret.c_str() + 1;
+								++ptr;
+								state = LASTSLASH;
+							}
+							else
+							{
+								ret[count++] = '.';
+								ret[count++] = '.';
+								ret[count++] = *ptr;
+								++ptr;
+								state = NONE;
+							}
+							break;
+						default:
+							if (*ptr == '/')
+							{
+								ret[count++] = *ptr;
+								++ptr;
+								state = LASTSLASH;
+							}
+							else
+							{
+								ret[count++] = *ptr;
+								++ptr;
+								state = NONE;
+							}
+					}
+				}
+
+				if (question_dash)
+				{
+					while (*ptr)
+					{
+						ret[count++] = *ptr;
+						++ptr;
+					}
+				}
+
+				ret.erase(count);
+			}
+
+			return ret;
+		}
+
+		string convert_link(const string& relative, const Uri& root)
+		{
 			string url(relative);
-			size_t find;
+			string::size_type find;
 
 			url = HTML::decode_entities(url);
 
-			if ((find = url.find("#")) != string::npos) url.erase(find);
-
-			if (url.find("http://") == 0) return url;
-			if (url.find("https://") == 0) return url;
-			if (url.find("javascript:") == 0) return url;
-			if (url.find("mailto:") == 0) return url;
-			if (url.find("ftp://") == 0) return url;
-			if (url.find("gopher://") == 0) return url;
-			if (url.find("file:") == 0) url.erase(0, strlen("file:"));
-
-			int absolute = 0;
-			if (url[0] == '/') absolute = 1;
-
-			static regexx::Regexx hostpat;
-			hostpat.expr("(\\w+)://(([\\w:-]+)@)?([\\w\\.-]+)(:(\\d+))?(/.*)?");
-			if (hostpat.str(root).exec() == 0) return url;
-			string protocol = hostpat.match[0].atom[0].str();
-			string host = hostpat.match[0].atom[3].str();
-			if (hostpat.match[0].atom.size() > 4)
-				host += hostpat.match[0].atom[4].str();
-			string path;
-			if (hostpat.match[0].atom.size() > 6)
-				path = hostpat.match[0].atom[6].str();
-			string prefix(protocol + string("://"));
-
-			if (path.empty()) path = "/";
-
-			if (absolute) {
-				path = url;
-			} else {
-				if ((find = path.find("?")) != string::npos) path.erase(find);
-				find = path.rfind("/");
-				if (find != string::npos) path.erase(find+1);
-				path += url;
-			}
-
-			while ((find = path.find("//")) != string::npos) path.erase(find, 1);
-			while ((find = path.find("/./")) != string::npos) path.erase(find, 2);
-			while ((find = path.find("/../")) != string::npos) {
-				size_t dir_to_erase;
-				dir_to_erase = path.rfind("/", find - 1);
-				if (dir_to_erase >= find) dir_to_erase = string::npos;
-				if (dir_to_erase != string::npos) {
-					path.erase(dir_to_erase, find - dir_to_erase + 3);
-				} else {
-					path.erase(find, 3);
+			string::size_type a;
+			a = 0;
+			while ((a = url.find_first_of(" \r\n", a)) != string::npos)
+			{
+				switch (url[a])
+				{
+					case ' ':
+						url.replace(a, 1, "%20");
+						break;
+					case '\r':
+						url.erase(a, 1);
+						break;
+					case '\n':
+						url.erase(a, 1);
+						break;
 				}
 			}
 
-			url = prefix + host + path;
-
-			string::size_type a;
-			while ((a = url.find("\r")) != string::npos) {
-				url.erase(a, 1);
+			Uri uri;
+			try
+			{
+				Uri rel(url);
+				uri = rel.absolute(root);
+				uri.path(normalize_slashs(uri.path()));
 			}
-			while ((a = url.find("\n")) != string::npos) {
-				url.erase(a, 1);
+			catch (Uri::Exception)
+			{
+				return string();
 			}
 
-			return url;
+			return uri.unparse(Uri::REMOVE_FRAGMENT);
 		}
 
 		string __serialize_gml(const tree<HTML::Node> &tr, tree<HTML::Node>::iterator it, tree<HTML::Node>::iterator end, uint parent_id, uint& label) {

@@ -3,8 +3,7 @@
 
 #AC_PREREQ(2.57)
 AC_INIT(htmlcxx.cc)
-AM_INIT_AUTOMAKE(htmlcxx, 0.2)
-#AC_CONFIG_SRCDIR([TCPClientSocket.cpp])
+AM_INIT_AUTOMAKE(htmlcxx, 0.4)
 AM_CONFIG_HEADER([config.h])
 AM_DISABLE_STATIC
 
@@ -35,27 +34,6 @@ AC_HEADER_TIME
 # Checks for library functions.
 
 AC_LANG_CPLUSPLUS
-
-AC_ARG_WITH(regexx,
-		[  --with-regexx=DIR         prefix of regexx installation. e.g. /usr/local or /usr],
-		[
-		REGX_PREFIX=$with_regexx
-		AC_SUBST(REGX_PREFIX)
-		REGX_LIBS="-L${REGX_PREFIX}/lib -lregexx"
-		REGX_CFLAGS="-I${REGX_PREFIX}/include"
-		AC_SUBST(REGX_LIBS)
-		AC_SUBST(REGX_CFLAGS)
-
-		CFLAGS="$CFLAGS $REGX_CFLAGS"
-		LIBS="$LIBS $REGX_LIBS"
-		],
-		AC_CHECK_LIB(regexx, main, LIBS="$LIBS -lregexx",
-			AC_MSG_ERROR([You must call configure with the --with-regexx option.
-	This tells configure where to find the regexx C++ library and headers.
-	e.g. --with-regexx=/usr/local or --with-regexx=/usr]))
-		)
-
-
 
 AC_CONFIG_FILES([Makefile html/Makefile css/Makefile])
 AC_OUTPUT

@@ -1,16 +1,12 @@
-#ifndef __HTML_PARSER_H__
-#define __HTML_PARSER_H__
+#ifndef __HTML_PARSER_NODE_H
+#define __HTML_PARSER_NODE_H
 
-#include <cstring>
 #include <map>
-#include <vector>
 #include <string>
-#include <stdexcept>
-#include "tree.h"
+#include <utility>
 
 namespace htmlcxx {
 	namespace HTML {
-
 		class Node {
 
 			public:
@@ -38,19 +34,20 @@ namespace htmlcxx {
 				bool isComment() const { return this->mComment; }
 				void isComment(bool comment){ this->mComment = comment; }
 
-				std::string attribute(const std::string &attr) const { 
+				std::pair<bool, std::string> attribute(const std::string &attr) const
+				{ 
 					std::map<std::string, std::string>::const_iterator i = this->mAttributes.find(attr);
 					if (i != this->mAttributes.end()) {
-						return i->second;
+						return make_pair(true, i->second);
 					} else {
-						return std::string();
+						return make_pair(false, std::string());
 					}
 				}
 
 				operator std::string() const;
-				std::ostream &Node::operator<<(std::ostream &stream) const;
+				std::ostream &operator<<(std::ostream &stream) const;
 
-				std::map<std::string, std::string> getAttributes() const { return this->mAttributes; }
+				std::map<std::string, std::string> attributes() const { return this->mAttributes; }
 				void parseAttributes();
 
 				bool operator==(const Node &rhs) const;
@@ -66,26 +63,7 @@ namespace htmlcxx {
 				bool mIsHtmlTag;
 				bool mComment;
 		};
-
-		class Parser {
-
-			public:
-				Parser(){}
-				~Parser(){}
-				tree<HTML::Node> parse(const std::string &html);
-			protected:
-
-				void parseHtmlTag(char const *&c, char const *end);
-				void skipHtmlTag(char const *&c, char const *end);
-				void parseContent(char const *b, char const *c, char const *end);
-				void parseComment(char const *b, char const *c, char const *end);
-
-				tree<HTML::Node> mHtmlTree;
-				const char *mpStart;
-				tree<HTML::Node>::iterator mCurrentState;
-		};
-		std::ostream &operator<<(std::ostream &stream, const tree<HTML::Node> &tr);
-	}//namespace HTML
-}//namespace htmlcxx
+	}
+}
 
 #endif

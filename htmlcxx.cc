@@ -1,4 +1,4 @@
-#include "html/parser.h"
+#include "html/Parser.h"
 #include "html/utils.h"
 #include "css/parser_pp.h"
 #include "config.h"
@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <cstdio>
 
 #include <getopt.h>
 
@@ -131,8 +132,8 @@ int main(int argc, char **argv) {
 				{
 					CSS::Parser::Selector s;
 					s.setElement(k->tagName());
-					s.setId(k->attribute("id"));
-					s.setClass(k->attribute("class"));
+					s.setId(k->attribute("id").second);
+					s.setClass(k->attribute("class").second);
 					s.setPseudoClass(CSS::Parser::NONE_CLASS);
 					s.setPseudoElement(CSS::Parser::NONE_ELEMENT);
 					v.push_back(s);
