@@ -11,6 +11,10 @@ noinst_PROGRAMS = tests
 tests_SOURCES = tests.cc
 tests_LDADD = libhtmlcxx.la
 
+bin_PROGRAMS = htmlcxx
+htmlcxx_SOURCES = htmlcxx.cc
+htmlcxx_LDADD = libhtmlcxx.la
+
 TESTS = tests
 
 includedir = $(prefix)/include/htmlcxx
