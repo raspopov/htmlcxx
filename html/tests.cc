@@ -1,9 +1,10 @@
 #include <string>
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include "CharsetConverter.h"
 #include "Uri.h"
-#include "Parser.h"
+#include "ParserDom.h"
 #include "utils.h"
 
 using namespace std;
@@ -40,8 +41,9 @@ class HtmlTest {
 		tree<HTML::Node> tr;
 		string html = "<head></head><body>\n\n\n\n<center>\n<table width=\"600\">\n<tbody><tr>\n<td width=\"120\"><a href=\"/index.html\"><img src=\"/adt-SUA/images/ADT_LOGO.gif\" alt=\"adt logo\" align=\"middle\" border=\"0\"></a></td>\n<td width=\"480\"><font size=\"+2\" face=\"helvetica,arial\"><b>Australian Digital Theses Program<br></b></font></td>\n</tr>\n</tbody></table>\n</center>\n<center>\n</center>\n</body>";
 
-		HTML::Parser parser;
-		tr = parser.parse(html);
+		HTML::ParserDom parser;
+		parser.parse(html);
+		tr = parser.getTree();
 		cerr << tr << endl;
 		cerr << " ok" << endl;
 		return true;
@@ -152,8 +154,9 @@ class TagInitTest
 			current = reference.append_child(current,n);
 
 			tree<HTML::Node> tr;
-			HTML::Parser parser;
-			tr = parser.parse(html);
+			HTML::ParserDom parser;
+			parser.parse(html);
+			tr = parser.getTree();
 //			cerr << reference << endl;
 //			cerr << tr << endl;
 			myassert(my_tree_compare(tr.begin(), tr.end(), reference.begin()));
@@ -168,8 +171,9 @@ class ParseAttrTest
 			string html("<a hRef=\"teste.htm\" attr3=\"http://www.caveofpain.kit.net/pati_10_(piercing).jpg \"target=\"_blank\" attr2=\" none \"centeR attr1='ComiDa>");
 
 			tree<HTML::Node> t;
-			HTML::Parser parser;
-			t = parser.parse(html);
+			HTML::ParserDom parser;
+			parser.parse(html);
+			t = parser.getTree();
 
 			tree<HTML::Node>::iterator it = t.begin();
 			++it;
@@ -194,12 +198,39 @@ class CharsetTest
 		}
 };
 
+class ParserTest : public HTML::ParserSax
+{
+	public:
+		ParserTest() {}
+		~ParserTest() {}
+
+	protected:
+		virtual void foundTag(HTML::Node node, bool isEnd)
+		{
+//			cerr << "foundTag: " << node << endl;
+		}
+		virtual void foundText(HTML::Node node)
+		{
+//			cerr << "foundText: " << node << endl;
+		}
+		virtual void foundComment(HTML::Node node)
+		{
+//			cerr << "foundComment: " << node << endl;
+		}
+};
+
 int main(int argc, char **argv) {
 
 	HtmlTest ht;
 	myassert(ht.parse());
 	myassert(ht.string_manip());
 
+	ifstream f(argv[1]);
+	HTML::ParserSax parser;
+//	parser.parse(istreambuf_iterator<char>(f), istreambuf_iterator<char>());
+//	tree<HTML::Node> t = parser.getTree();
+//	cerr << t << endl;
+	
 	TagInitTest test2;
 	test2.test();
 

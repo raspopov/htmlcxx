@@ -10,6 +10,7 @@ namespace htmlcxx
 	class Uri
 	{
 		public:
+
 			class Exception : public std::runtime_error
 			{
 				public:
@@ -18,11 +19,17 @@ namespace htmlcxx
 			};
 			
 			Uri();
-			Uri(const std::string &uri) throw (Exception);
+			Uri(const std::string &uri);
 			~Uri();
+
+			static std::string encode(const std::string &uri);
+			static std::string decode(const std::string &uri);
 
 			std::string unparse(int flags = 0) const;
 			Uri absolute(const Uri &base) const;
+
+			std::string canonicalHostname(unsigned int maxDepth = UINT_MAX) const;
+			unsigned int hostnameDepth() const;
 
 			static const unsigned int URI_FTP_DEFAULT_PORT =          21 ; /**< default FTP port */
 			static const unsigned int URI_SSH_DEFAULT_PORT =          22 ; /**< default SSH port */
@@ -71,8 +78,8 @@ namespace htmlcxx
 			void existsFragment(bool existsFragment);
 			bool existsQuery() const;
 			void existsQuery(bool existsQuery);
-		private:
-			void init(const std::string &uri_str) throw (Exception);
+		protected:
+			void init(const std::string &uri_str);
 			
 			std::string mScheme;
 			std::string mUser;

@@ -9,6 +9,7 @@
 namespace htmlcxx {
 namespace CSS {
 
+extern const char *IE_CSS;
 class Parser 
 {
 

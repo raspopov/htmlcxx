@@ -145,6 +145,7 @@ rgb\({w}{num}%?{w}\,{w}{num}%?{w}\,{w}{num}%?{w}\)	{
 \n				{BEGIN(0); /* ignore whitespace */}
 \<\!\-\-			{BEGIN(0); return CDO;}
 \-\-\>				{BEGIN(0); return CDC;}
+\/\/				{BEGIN(0); return CSL;}
 .				{fprintf(stderr, "Illegal character (%d)\n", *yytext);}
 
 %%

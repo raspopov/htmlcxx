@@ -11,6 +11,7 @@ namespace htmlcxx {
 
 			public:
 				Node() {}
+				//Node(const Node &rhs); //uses default
 				~Node() {}
 
 				inline void text(const std::string& text) { this->mText = text; }
@@ -19,11 +20,11 @@ namespace htmlcxx {
 				inline void closingText(const std::string &text) { this->mClosingText = text; }
 				inline const std::string& closingText() const { return mClosingText; }
 
-				inline void offset(uint offset) { this->mOffset = offset; }
-				inline uint offset() const { return this->mOffset; }
+				inline void offset(unsigned int offset) { this->mOffset = offset; }
+				inline unsigned int offset() const { return this->mOffset; }
 
-				inline void length(uint length) { this->mLength = length; }
-				inline uint length() const { return this->mLength; }
+				inline void length(unsigned int length) { this->mLength = length; }
+				inline unsigned int length() const { return this->mLength; }
 
 				inline void tagName(const std::string& tagname) { this->mTagName = tagname; }
 				inline const std::string& tagName() const { return this->mTagName; }
@@ -47,7 +48,7 @@ namespace htmlcxx {
 				operator std::string() const;
 				std::ostream &operator<<(std::ostream &stream) const;
 
-				std::map<std::string, std::string> attributes() const { return this->mAttributes; }
+				const std::map<std::string, std::string>& attributes() const { return this->mAttributes; }
 				void parseAttributes();
 
 				bool operator==(const Node &rhs) const;
@@ -56,8 +57,8 @@ namespace htmlcxx {
 
 				std::string mText;
 				std::string mClosingText;
-				uint mOffset;
-				uint mLength;
+				unsigned int mOffset;
+				unsigned int mLength;
 				std::string mTagName;
 				std::map<std::string, std::string> mAttributes;
 				bool mIsHtmlTag;

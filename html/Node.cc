@@ -1,6 +1,11 @@
+#include <iostream>
+#include <cctype>
 #include <algorithm>
-#include <cstring>
+#include "wincstring.h"
 #include "Node.h"
+
+//#define DEBUG
+#include "debug.h"
 
 using namespace std;
 using namespace htmlcxx;
@@ -36,7 +41,7 @@ void Node::parseAttributes()
 		while (isspace(*ptr)) ++ptr;
 
 		end = ptr;
-		while (isalnum(*end)) ++end;
+		while (isalnum(*end) || *end == '-') ++end;
 		key.assign(end - ptr, '\0');
 		transform(ptr, end, key.begin(), ::tolower);
 		ptr = end;

@@ -1,14 +1,19 @@
-#include "html/Parser.h"
+#include "html/ParserDom.h"
 #include "html/utils.h"
+#include "html/wincstring.h"
 #include "css/parser_pp.h"
+#ifndef WIN32
 #include "config.h"
+#else
+#define VERSION "0.6"
+#endif
 
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
 #include <cstdio>
 
-#include <getopt.h>
+#include "wingetopt.h"
 
 using namespace std;
 using namespace htmlcxx;
@@ -27,14 +32,13 @@ void usage_long(string prg) {
 	return;
 }
 
-int main(int argc, char **argv) {
-
-
+int main(int argc, char **argv) 
+{
+	tree<HTML::Node> tr;
+	bool parse_css = true;
+	string css_code;
 	try 
 	{
-
-		bool parse_css = true;
-		string css_code;
 		while (1) 
 		{
 			char c = getopt(argc, argv, "hVC");	
@@ -104,10 +108,28 @@ int main(int argc, char **argv) {
 
 
 
-		HTML::Parser parser;
-		tree<HTML::Node> tr = parser.parse(html);
+		HTML::ParserDom parser;
+		parser.parse(html);
+		tr = parser.getTree();
 		cout << tr << endl;
 
+	} catch (exception &e) {
+		cerr << "Exception " << e.what() << " caught" << endl;
+		exit(1);
+	} catch (...) {
+		cerr << "Unknow exception caught " << endl;
+	}
+
+#ifdef WIN32
+		if(parse_css)
+		{
+			cerr << "Css parsing not supported in win32" << endl;
+			return 1;
+		}
+		return 0;
+#else
+	if (parse_css) try
+	{
 		if(!parse_css) exit(0);
 
 		CSS::Parser css_parser;
@@ -145,7 +167,7 @@ int main(int argc, char **argv) {
 				map<string, string>::const_iterator mend = attributes.end();
 
 				string tag = it->tagName();
-				for(uint i = 0; i < tag.size(); ++i) tag[i] = ::toupper(tag[i]);
+				for(unsigned int i = 0; i < tag.size(); ++i) tag[i] = ::toupper(tag[i]);
 				cout << tag << "@[" << it->offset() << ":" << it->offset() + it->length() << ")" << endl;
 				for(; mit != mend; ++mit) cout << mit->first << ": " << mit->second << endl;
 				cout << endl;
@@ -179,4 +201,5 @@ int main(int argc, char **argv) {
 	}
 
 	exit(0);
+#endif
 }

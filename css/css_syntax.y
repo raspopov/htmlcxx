@@ -49,6 +49,7 @@
 %token RGB
 %token CDO
 %token CDC
+%token CSL
 
 %type <pseudo_class> solitary_pseudo_class
 %type <pseudo_class> pseudo_class
@@ -70,7 +71,6 @@
 %type <lexeme> LENGTH
 %type <lexeme> EMS
 %type <lexeme> EXS
-%type <lexeme> IDENT
 %type <lexeme> URL
 %type <lexeme> RGB
 %type <lexeme> IDENT
@@ -127,6 +127,7 @@ comments
 comment
 : CDO
 | CDC
+| CSL
 ;
 
 import
@@ -523,6 +524,7 @@ expr
 							free($3);
 							$$ = s;
 						}
+| expr error			{ $$ = $1; }
 ;
 
 term
@@ -570,7 +572,9 @@ hexcolor
 %%
 
 int yyerror(char *s) {
+#if YYDEBUG
 	fprintf(stderr, "Error: %s\n", s);
+#endif
 	return 0;
 }
 

@@ -1,5 +1,5 @@
-#ifndef __CHARSET_COVERTER_H__
-#define __CHARSET_COVERTER_H__
+#ifndef __CHARSET_CONVERTER_H__
+#define __CHARSET_CONVERTER_H__
 
 #include <iconv.h>
 #include <string>

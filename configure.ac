@@ -3,7 +3,7 @@
 
 #AC_PREREQ(2.57)
 AC_INIT(htmlcxx.cc)
-AM_INIT_AUTOMAKE(htmlcxx, 0.4)
+AM_INIT_AUTOMAKE(htmlcxx, 0.7.3)
 AM_CONFIG_HEADER([config.h])
 AM_DISABLE_STATIC
 
@@ -34,6 +34,7 @@ AC_HEADER_TIME
 # Checks for library functions.
 
 AC_LANG_CPLUSPLUS
+CXXFLAGS="$CXXFLAGS -DDEFAULT_CSS=\"\\\"$datadir/htmlcxx/css/default.css\\\"\""
 
 AC_CONFIG_FILES([Makefile html/Makefile css/Makefile])
 AC_OUTPUT

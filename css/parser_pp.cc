@@ -6,8 +6,11 @@
 
 using namespace std;
 
+const char *htmlcxx::CSS::IE_CSS = DEFAULT_CSS;
+
 namespace htmlcxx {
 namespace CSS {
+
 	
 Parser::Selector::Selector() : mPsClass(NONE_CLASS), mPsElement(NONE_ELEMENT) {}
 

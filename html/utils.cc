@@ -1,8 +1,6 @@
 #include <algorithm>
 #include <cctype>
-#include <regexx.hh>
 #include <strstream>
-#include <iconv.h>
 #include "Uri.h"
 
 #include "utils.h"
@@ -48,7 +46,7 @@ namespace htmlcxx {
 
 		string single_blank(const string &str) {
 
-			uint count = 0;
+			unsigned int count = 0;
 			bool first_space = true;
 			const char *ptr = str.c_str();
 
@@ -245,7 +243,7 @@ namespace htmlcxx {
 
 		string decode_entities(const string &str)
 		{
-			uint count = 0;
+			unsigned int count = 0;
 			const char *ptr = str.c_str();
 			const char *end;
 
@@ -267,8 +265,8 @@ namespace htmlcxx {
 					if (!entity.empty() && entity[0] == '#')
 					{
 						entity.erase(0, 1);
-						unsigned char chr = atoi(entity.c_str());
-						if (chr != 0)
+						int chr = atoi(entity.c_str());
+						if (chr > 0 && chr <= UCHAR_MAX)
 						{
 							ret[count++] = chr;
 						}
@@ -471,8 +469,7 @@ namespace htmlcxx {
 		string convert_link(const string& relative, const Uri& root)
 		{
 			string url(relative);
-			string::size_type find;
-
+			
 			url = HTML::decode_entities(url);
 
 			string::size_type a;
@@ -508,7 +505,7 @@ namespace htmlcxx {
 			return uri.unparse(Uri::REMOVE_FRAGMENT);
 		}
 
-		string __serialize_gml(const tree<HTML::Node> &tr, tree<HTML::Node>::iterator it, tree<HTML::Node>::iterator end, uint parent_id, uint& label) {
+		string __serialize_gml(const tree<HTML::Node> &tr, tree<HTML::Node>::iterator it, tree<HTML::Node>::iterator end, unsigned int parent_id, unsigned int& label) {
 
 			using namespace std;
 			ostrstream ret;
@@ -537,7 +534,7 @@ namespace htmlcxx {
 			ret += "graph [";
 			ret += "directed 1\n";
 			ret += "node [ id 0\n label \"0\"\n ]\n";
-			uint label = 0;
+			unsigned int label = 0;
 			ret += __serialize_gml(tr, it, end, 0, label);
 			ret += "]";
 			return ret;

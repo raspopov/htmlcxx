@@ -1,7 +1,8 @@
 #ifndef __HTML_UTILS_H__
 #define __HTML_UTILS_H__
 
-#include "Parser.h"
+#include "tree.h"
+#include "Node.h"
 
 namespace htmlcxx {
 
