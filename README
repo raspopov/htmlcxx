@@ -1,0 +1,25 @@
+htmlcxx - html and css APIs for C++
+
+Description
+-----------
+
+This is a simple non-validating html and css parser for C++.
+Although there are several other html parsers available, htmlcxx has some
+characteristics that make it unique:
+
+	* STL like navigation of DOM tree, using excelent's tree.hh library 
+	  from Kasper Peeters
+	* It is possible to reproduce exactly, character by character, the 
+	  original document from the parse tree
+	* Bundled css parser
+	* Optional parsing of attributes	
+	* C++ code that looks like C++
+
+The parsing politics of htmlcxx are very simple, and almost no effort is done
+to correct invalid html. The focus of the library is not speed, but it is
+fast enough for most needs.
+
+Enjoy!
+
+Davi de Castro Reis
+Robson Braga Araújo
