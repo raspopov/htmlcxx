@@ -1,25 +1,65 @@
-htmlcxx - html and css APIs for C++
+2004-03-27 10:50  davi
 
-Description
------------
+	Changed documentation to txt2tags format.
 
-This is a simple non-validating html and css parser for C++.
-Although there are several other html parsers available, htmlcxx has some
-characteristics that make it unique:
+2004-03-26 23:42  davi
 
-	* STL like navigation of DOM tree, using excelent's tree.hh library 
-	  from Kasper Peeters
-	* It is possible to reproduce exactly, character by character, the 
-	  original document from the parse tree
-	* Bundled css parser
-	* Optional parsing of attributes	
-	* C++ code that looks like C++
+	Broken. Including css code.
 
-The parsing politics of htmlcxx are very simple, and almost no effort is done
-to correct invalid html. The focus of the library is not speed, but it is
-fast enough for most needs.
+2004-03-26 23:19  davi
 
-Enjoy!
+	New htmlcxx with coding standards and css parser working fine.
 
-Davi de Castro Reis
-Robson Braga Araújo
+2004-03-25 20:13  davi
+
+	Added missing file.
+
+2004-03-25 20:07  davi
+
+	Added sample htmlcxx application.
+
+2004-03-23 17:05  robson
+
+	decode_entities: do not convert entity "#00" because it generates
+	bogus strings.
+	
+	convert_link: make hostpat static to only compile the regex once.
+	Remove "\r" and "\n" from link because browsers also do so.
+
+2004-03-11 23:30  davi
+
+	Fixed wrong header include.
+
+2003-12-23 17:27  davi
+
+	Simple change to printed output
+
+2003-11-26 22:20  davi
+
+	Added missing include
+
+2003-11-26 17:30  davi
+
+	Added simple tests and disabled build of static libraries
+
+2003-11-26 12:49  davi
+
+	Fixed tree.h inclusion problems
+
+2003-11-20 17:14  davi
+
+	Fixed makefile.am until I don't add missing file
+
+2003-11-19 21:41  davi
+
+	C++ HTML DOM parser
+
+2003-11-19 21:41  davi
+
+	Initial revision
+
+2003-11-19 21:23  davi
+
+	Initial code already working. Before freezing API, should think
+	whether it is worth to have a object for the parsed tree
+

@@ -1,14 +1,12 @@
 #include <algorithm>
 #include <cctype>
 #include <regexx.hh>
-#include <strstream.h>
-
-#include "html_utils.h"
-#include "html_parser.h"
+#include <strstream>
+#include "utils.h"
 
 using namespace std;
 namespace htmlcxx {
-	namespace html {
+	namespace HTML {
 
 		string single_blank(const string &str) {
 
@@ -214,8 +212,13 @@ namespace htmlcxx {
 				if (!entity.empty() && entity[0] == '#') {
 					entity.erase(0, 1);
 					unsigned char chr = atoi(entity.c_str());
-					str.replace(init, end - init + 1, string(1, chr));
-					end = init+1;
+					if (chr != 0) {
+						str.replace(init, end - init + 1, string(1, chr));
+						end = init+1;
+					} else {
+						str.replace(init, end - init + 1, string(""));
+						end = init;
+					}
 				} else {
 					for (int i = 0; entities[i].str != NULL; i++) {
 						if (entity == entities[i].str) {
@@ -275,7 +278,7 @@ namespace htmlcxx {
 			string url(relative);
 			size_t find;
 
-			url = html::decode_entities(url);
+			url = HTML::decode_entities(url);
 
 			if ((find = url.find("#")) != string::npos) url.erase(find);
 
@@ -290,7 +293,7 @@ namespace htmlcxx {
 			int absolute = 0;
 			if (url[0] == '/') absolute = 1;
 
-			regexx::Regexx hostpat;
+			static regexx::Regexx hostpat;
 			hostpat.expr("(\\w+)://(([\\w:-]+)@)?([\\w\\.-]+)(:(\\d+))?(/.*)?");
 			if (hostpat.str(root).exec() == 0) return url;
 			string protocol = hostpat.match[0].atom[0].str();
@@ -327,13 +330,23 @@ namespace htmlcxx {
 			}
 
 			url = prefix + host + path;
+
+			string::size_type a;
+			while ((a = url.find("\r")) != string::npos) {
+				url.erase(a, 1);
+			}
+			while ((a = url.find("\n")) != string::npos) {
+				url.erase(a, 1);
+			}
+
 			return url;
 		}
-		string __serialize_gml(const tree<node> &tr, tree<node>::iterator it, tree<node>::iterator end, uint parent_id, uint& label) {
+
+		string __serialize_gml(const tree<HTML::Node> &tr, tree<HTML::Node>::iterator it, tree<HTML::Node>::iterator end, uint parent_id, uint& label) {
 
 			using namespace std;
 			ostrstream ret;
-			tree<node>::sibling_iterator sib = tr.begin(it);
+			tree<HTML::Node>::sibling_iterator sib = tr.begin(it);
 			while(sib != tr.end(it)) {
 				ret << "node [ id " << ++label << "\n label \"" << label << "\"\n]\n";
 				ret << "edge [ \n source " << parent_id << "\n target " << label << "\n]" << endl;
@@ -347,12 +360,12 @@ namespace htmlcxx {
 		}
 
 
-		string serialize_gml(const tree<node> &tr) {
+		string serialize_gml(const tree<HTML::Node> &tr) {
 
 			using namespace std;
 
-			tree<node>::pre_order_iterator it = tr.begin();
-			tree<node>::pre_order_iterator end = tr.end();
+			tree<HTML::Node>::pre_order_iterator it = tr.begin();
+			tree<HTML::Node>::pre_order_iterator end = tr.end();
 
 			string ret;
 			ret += "graph [";
