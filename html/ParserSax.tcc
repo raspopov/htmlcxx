@@ -1,5 +1,3 @@
-#include "multi_pass.hpp"
-
 //#define DEBUG
 //#include "debug.h"
 
@@ -24,21 +22,6 @@ void htmlcxx::HTML::ParserSax::parse(_Iterator begin, _Iterator end)
 {
 //	std::cerr << "Parsing iterator" << std::endl;
 	parse(begin, end, std::iterator_traits<_Iterator>::iterator_category());
-}
-
-template <typename _Iterator>
-void htmlcxx::HTML::ParserSax::parse(_Iterator &begin, _Iterator &end, std::input_iterator_tag)
-{
-	typedef typename boost::spirit::multi_pass<_Iterator,
-			boost::spirit::multi_pass_policies::input_iterator,
-			boost::spirit::multi_pass_policies::ref_counted,
-			boost::spirit::multi_pass_policies::no_check,
-			boost::spirit::multi_pass_policies::std_deque>
-				multi_pass;
-//	std::cerr << "Parsing input_iterator" << std::endl;
-	multi_pass b(begin);
-	multi_pass e(end);
-	return parse(b, e, std::forward_iterator_tag());
 }
 
 template <typename _Iterator>

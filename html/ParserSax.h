@@ -32,9 +32,6 @@ namespace htmlcxx
 
 				virtual void endParsing() {}
 
-				template <typename _Iterator>
-				void parse(_Iterator &begin, _Iterator &end,
-						std::input_iterator_tag);
 
 				template <typename _Iterator>
 				void parse(_Iterator &begin, _Iterator &end,

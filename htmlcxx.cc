@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	{
 		while (1) 
 		{
-			char c = getopt(argc, argv, "hVC");	
+			signed char c = getopt(argc, argv, "hVC");	
 			if(c == -1) break;
 			switch(c) {
 				case 'h':

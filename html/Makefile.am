@@ -26,6 +26,6 @@ uriTests_LDADD = libhtmlcxx.la
 TESTS = tests uriTests
 
 includedir = $(prefix)/include/htmlcxx/html
-include_HEADERS = ParserSax.h ParserSax.tcc ParserDom.h utils.h tree.h Node.h Uri.h CharsetConverter.h Extensions.h ci_string.h multi_pass.hpp fixed_size_queue.hpp tld.h
+include_HEADERS = ParserSax.h ParserSax.tcc ParserDom.h utils.h tree.h Node.h Uri.h CharsetConverter.h Extensions.h ci_string.h tld.h
 
 EXTRA_DIST = gen_tld.pl tld.list

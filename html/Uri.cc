@@ -108,11 +108,11 @@ static const unsigned char uri_delims[256] = {
 static size_t wwwPrefixOffset(const std::string& hostname);
 
 Uri::Uri()
-: mScheme(), mUser(), mPassword(), mHostname(), mPath(), mQuery(), mFragment(), mPort(0), mExistsFragment(false), mExistsQuery(false)
+: mScheme(), mUser(), mPassword(), mHostname(), mPath(), mQuery(), mFragment(), mExistsQuery(false), mExistsFragment(false), mPort(0)
 {}
 
 Uri::Uri(const string &uri_str)
-: mScheme(), mUser(), mPassword(), mHostname(), mPath(), mQuery(), mFragment(), mPort(0), mExistsFragment(false), mExistsQuery(false)
+: mScheme(), mUser(), mPassword(), mHostname(), mPath(), mQuery(), mFragment(), mExistsQuery(false), mExistsFragment(false), mPort(0)
 {
 	init(uri_str);
 }

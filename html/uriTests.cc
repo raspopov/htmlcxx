@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 		tests.push_back("http://www.embratel.net.br:80/joão.html");
 		tests.push_back("http://www.embratel.net.br:80/superjoão! .html");
 		while(1) {
-			char c = getopt(argc, argv, "hd:");
+			signed char c = getopt(argc, argv, "hd:");
 			if(c == -1) break;
 			switch(c) {
 				case 'd':

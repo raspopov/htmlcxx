@@ -34,6 +34,7 @@ document.
 Added utility code to escape/decode urls as defined by RFC 2396.
 Added new SAX interface. The API was slightly broken to support the new
 SAX interface :-(.
+Added Visual Studio 2003 projects for the WIN32 port.
 
 
 	Examples
@@ -63,7 +64,7 @@ at this example.
   	if (it->tagName() == "A")
   	{
   		it->parseAttributes();
-  		cout it->attributes("href");
+  		cout << it->attributes("href");
   	}
   }
   
@@ -113,11 +114,11 @@ distribution for details.
 
 Enjoy!
 
-Davi de Castro Reis
+Davi de Castro Reis - <davi (a) users sf net>
 
-Robson Braga Araújo
+Robson Braga Araújo - <braga (a) users sf net>
 
-Last Updated: Tue Feb 22 02:38:25 2005
+Last Updated: Thu Mar 24 00:56:05 2005
 
 
 
