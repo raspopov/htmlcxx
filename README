@@ -1,65 +1,71 @@
-2004-03-27 10:50  davi
+htmlcxx - html and css APIs for C++
 
-	Changed documentation to txt2tags format.
 
-2004-03-26 23:42  davi
+Description
 
-	Broken. Including css code.
+htmlcxx is a simple non-validating html and css1 parser for C++.
+Although there are several other html parsers available, htmlcxx has some
+characteristics that make it unique:
 
-2004-03-26 23:19  davi
+- STL like navigation of DOM tree, using excelent's tree.hh library from Kasper Peeters
+- It is possible to reproduce exactly, character by character, the original document from the parse tree
+- Bundled css parser
+- Optional parsing of attributes	
+- C++ code that looks like C++ (not so true anymore)
+- Offsets of tags/elements in the original document are stored in the nodes of the DOM tree
 
-	New htmlcxx with coding standards and css parser working fine.
+The parsing politics of htmlcxx are very simple, and almost no effort is done
+to correct invalid html. The focus of the library is not speed, but it is
+fast enough for most needs.
 
-2004-03-25 20:13  davi
+News for version 0.4
 
-	Added missing file.
+The DOM tree building behavior of htmlcxx now tries to mimic Mozilla Firefox parser. Added code to deal with uri parsing. The code is much faster. True API documentation will be available in the next version! By now, take a look at the htmlcxx sample application.
 
-2004-03-25 20:07  davi
+Examples
 
-	Added sample htmlcxx application.
+Using htmlcxx is quite simple. Take a look
+at this example.
 
-2004-03-23 17:05  robson
 
-	decode_entities: do not convert entity "#00" because it generates
-	bogus strings.
-	
-	convert_link: make hostpat static to only compile the regex once.
-	Remove "\r" and "\n" from link because browsers also do so.
+  #include <htmlcxx/html/parser.h>
+  ...
+  
+  //Parse some html code
+  string html = "<html><body>hey</body></html>";
+  HTML::Parser parser;
+  tree<HTML::Node> dom = parser.parse(html);
+  
+  //Print DOM tree
+  cout << dom << endl;
 
-2004-03-11 23:30  davi
 
-	Fixed wrong header include.
+The htmlcxx application
 
-2003-12-23 17:27  davi
+htmlcxx is the name of both the library and the utility
+application that comes with this package. Although the 
+htmlcxx (the application) is mostly useless for programming, you can use it 
+to easily see how htmlcxx (the library) would parse your html code
+Just install and try htmlcxx -h.
 
-	Simple change to printed output
+Downloads
 
-2003-11-26 22:20  davi
+Use the project page at sourceforge: http://sf.net/projects/htmlcxx
 
-	Added missing include
+License Stuff
 
-2003-11-26 17:30  davi
+ Code is now under the LGPL. This was our initial intention, and is now possible thanks to the author of tree.hh, that allowed us to use it under LGPL only for HTML::Node template instances. Check http://www.fsf.org or the COPYING file in the distribution for details about the LGPL license. The uri parsing code is a derivative work of Apache web server uri parsing routines. Check www.apache.org/licenses/LICENSE-2.0 or the ASF-2.0 file in the distribution for details.
 
-	Added simple tests and disabled build of static libraries
+----------------------------------------
 
-2003-11-26 12:49  davi
+Enjoy!
 
-	Fixed tree.h inclusion problems
+Davi de Castro Reis
 
-2003-11-20 17:14  davi
+Robson Braga Araújo
 
-	Fixed makefile.am until I don't add missing file
+Last Updated: Thu Jun 17 12:19:30 2004
 
-2003-11-19 21:41  davi
 
-	C++ HTML DOM parser
 
-2003-11-19 21:41  davi
-
-	Initial revision
-
-2003-11-19 21:23  davi
-
-	Initial code already working. Before freezing API, should think
-	whether it is worth to have a object for the parsed tree
 

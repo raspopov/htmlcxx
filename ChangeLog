@@ -1,3 +1,24 @@
+2004-06-07 13:56  robson
+
+	Added header to compile with gcc 2.95.2.
+
+2004-06-07 13:34  robson
+
+	New tests.
+
+2004-06-07 13:33  robson
+
+	Corrected to deal with urls like "?q=new".
+
+2004-06-07 13:32  robson
+
+	Added exception class.
+
+2004-06-03 16:27  davi
+
+	Added libtool versioning support. Changes to compile with icc.
+	Changed parser header name to respect coding guidelines.
+
 2004-05-24 16:06  robson
 
 	Corrected bug where we could go past the end in skipHtmlTag.
