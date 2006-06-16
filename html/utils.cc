@@ -253,7 +253,7 @@ namespace htmlcxx {
 			ptr = strchr(ptr, '&');
 			if (ptr == NULL) return ret;
 
-			count += ptr - str.c_str();
+			count += static_cast<unsigned int>(ptr - str.c_str());
 
 //			printf("url_init: %s\n", str.c_str());
 			while (*ptr)
@@ -353,7 +353,7 @@ namespace htmlcxx {
 			const char *question_dash;
 			const char *question;
 			const char *dash;
-			int count = 0;
+			unsigned int count = 0;
 			const char *ptr = url.c_str();
 			string ret(url);
 
@@ -373,7 +373,7 @@ namespace htmlcxx {
 			if (problem && problem < question_dash)
 			{
 				ptr = problem;
-				count = ptr - url.c_str();
+				count = static_cast<unsigned int>(ptr - url.c_str());
 				while (*ptr && ptr < question_dash)
 				{
 					switch (state)
@@ -422,7 +422,7 @@ namespace htmlcxx {
 								while (last_slash >= ret.c_str() && *last_slash != '/')
 									--last_slash;
 								if (last_slash >= ret.c_str())
-									count = last_slash - ret.c_str() + 1;
+									count = static_cast<unsigned int>(last_slash - ret.c_str() + 1);
 								++ptr;
 								state = LASTSLASH;
 							}

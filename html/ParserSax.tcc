@@ -1,3 +1,5 @@
+#include <cctype>
+
 //#define DEBUG
 //#include "debug.h"
 
@@ -304,7 +306,7 @@ void htmlcxx::HTML::ParserSax::parseHtmlTag(_Iterator b, _Iterator c)
 	htmlcxx::HTML::Node tag_node;
 	//by now, length is just the size of the tag
 	std::string text(b, c);
-	tag_node.length(text.length());
+	tag_node.length(static_cast<unsigned int>(text.length()));
 	tag_node.tagName(name);
 	tag_node.text(text);
 	tag_node.offset(mCurrentOffset);

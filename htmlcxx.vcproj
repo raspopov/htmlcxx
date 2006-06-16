@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_USE_DEBUG_HEAP"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -114,9 +114,6 @@
 			<File
 				RelativePath=".\html\ParserSax.cc"
 				FileType="0">
-			</File>
-			<File
-				RelativePath=".\stdafx.cpp">
 			</File>
 			<File
 				RelativePath=".\html\Uri.cc"
