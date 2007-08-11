@@ -23,7 +23,7 @@ template <typename _Iterator>
 void htmlcxx::HTML::ParserSax::parse(_Iterator begin, _Iterator end)
 {
 //	std::cerr << "Parsing iterator" << std::endl;
-	parse(begin, end, std::iterator_traits<_Iterator>::iterator_category());
+	parse(begin, end, typename std::iterator_traits<_Iterator>::iterator_category());
 }
 
 template <typename _Iterator>
