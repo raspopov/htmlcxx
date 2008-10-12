@@ -1,191 +1,69 @@
-2004-06-07 13:56  robson
+2008-10-12 18:41  davi
 
-	Added header to compile with gcc 2.95.2.
+	* Applied patch by Luca Bruno fixing gcc 4.3 compilation problems.
 
-2004-06-07 13:34  robson
+2007-08-11 20:23  davi
 
-	New tests.
+	* Bumped release again because sf.net problems.
 
-2004-06-07 13:33  robson
+2007-08-11 20:14  davi
 
-	Corrected to deal with urls like "?q=new".
+	* Updated version.
 
-2004-06-07 13:32  robson
+2007-08-11 20:06  davi
 
-	Added exception class.
+	*
+	  Fixed long standing typename bug.
 
-2004-06-03 16:27  davi
+2006-06-16 12:45  davi
 
-	Added libtool versioning support. Changes to compile with icc.
-	Changed parser header name to respect coding guidelines.
+	* Added missing files.
 
-2004-05-24 16:06  robson
+2006-06-16 12:23  davi
 
-	Corrected bug where we could go past the end in skipHtmlTag.
-	Calculate depth one once in operator<< for tree. Depth is O(n).
+	* Added missing files and incorporate some pending fixes.
 
-2004-05-24 16:04  robson
+2005-03-24 00:59  davi
 
-	Added missing <string> header.
+	* Removed useless files.
 
-2004-05-21 16:24  robson
+2005-03-24 00:58  davi
 
-	Uri now throws exception when link is not valid. This is caught by
-	conert_link.
+	* Small fixes for distribution.
 
-2004-05-21 15:35  robson
+2005-02-22 01:47  davi
 
-	Version 0.3.
+	* Lots of changes. Bumped version to 0.7.3.
 
-2004-05-21 15:24  robson
+2004-06-17 16:17  braga
 
-	Changes to work with gcc 2.95.2.
+	* Updated some documentation.
 
-2004-05-21 14:36  robson
+2004-06-16 13:38  braga
 
-	Changes to accomodate new features.
+	* Commiting all changes from local cvs.
 
-2004-05-21 14:35  robson
+2004-03-27 10:56  davi
 
-	Removed convert_charset. Now we use CharsetConverter class. Check
-	for utf8 signature in detect_utf8. Changed convert link to use the
-	Uri class and not regexx.
+	* Added css parser.
 
-2004-05-21 14:30  robson
+2004-03-25 16:33  davi
 
-	Class to check if the extension of the file in the url is in a
-	given set.
+	* Added sample htmlcxx application.
 
-2004-05-21 14:28  robson
+2004-03-25 16:24  davi
 
-	Class to convert from one charset to another.
+	* Initial revision
 
-2004-05-21 14:25  robson
+2004-03-25 16:24  davi
 
-	Changed parse method to return a const ref to the tree which is
-	much more efficient. Some other optimizations to make it faster.
+	* htmlcxx is now in CVS
 
-2004-05-21 14:20  robson
+2003-12-13 23:27  davi
 
-	Changed attribute method to return a pair so we can know when the
-	attribute is not present or present and empty. Trim white space
-	just after and just before the surrounding quotes for an attribute.
+	* Initial revision
 
-2004-05-21 14:15  robson
+2003-12-13 23:27  davi
 
-	Added own Uri class. We don't use regexx anymore.
-
-2004-05-18 13:52  robson
-
-	Added two utilities functions: detect_utf8 and convert_charset.
-	Rewrote single_blank and decode_entities to be much faster and
-	corrected some bugs.
-
-2004-05-17 16:36  robson
-
-	Changed parseAttributes the be much faster, much more resilient and
-	much more like mozilla. The method was buggy and not utilized. Now
-	it is better than the HTML::get_attribute and much faster. Change
-	in interface: getAttributes renamed to attributes to follow coding
-	guidelines.
-
-2004-05-12 16:01  robson
-
-	Move the Node class to a separated file.
-
-2004-05-12 15:20  robson
-
-	Fixed bug where we went beyond the end of the file if it ended in
-	the middle of a tag or a quote inside a tag.
-
-2004-05-10 16:30  robson
-
-	Lots of change to the core of the html parser. Now we treat the
-	tags script, style, xmp, plaintext and textarea correctly. We also
-	treat non-matching closing tags as comments. We treat tags
-	beginning with <? or <% as comments also. All this behavior is
-	based in the HTML::Parser and in the Mozilla browser. Mozilla still
-	does some magic that we don't, treating tags that don't have a
-	closing '>'.
-
-2004-04-19 12:26  robson
-
-	Changed url fixing of "\r\n" to beginning of function.
-
-2004-04-05 14:32  davi
-
-	Added missing headers.
-
-2004-04-01 21:24  davi
-
-	Changes to make code icc friendly.
-
-2004-03-27 11:49  davi
-
-	Fixed css/Makefile.am.
-
-2004-03-27 10:50  davi
-
-	Changed documentation to txt2tags format.
-
-2004-03-26 23:42  davi
-
-	Broken. Including css code.
-
-2004-03-26 23:19  davi
-
-	New htmlcxx with coding standards and css parser working fine.
-
-2004-03-25 20:13  davi
-
-	Added missing file.
-
-2004-03-25 20:07  davi
-
-	Added sample htmlcxx application.
-
-2004-03-23 17:05  robson
-
-	decode_entities: do not convert entity "#00" because it generates
-	bogus strings.
-	
-	convert_link: make hostpat static to only compile the regex once.
-	Remove "\r" and "\n" from link because browsers also do so.
-
-2004-03-11 23:30  davi
-
-	Fixed wrong header include.
-
-2003-12-23 17:27  davi
-
-	Simple change to printed output
-
-2003-11-26 22:20  davi
-
-	Added missing include
-
-2003-11-26 17:30  davi
-
-	Added simple tests and disabled build of static libraries
-
-2003-11-26 12:49  davi
-
-	Fixed tree.h inclusion problems
-
-2003-11-20 17:14  davi
-
-	Fixed makefile.am until I don't add missing file
-
-2003-11-19 21:41  davi
-
-	C++ HTML DOM parser
-
-2003-11-19 21:41  davi
-
-	Initial revision
-
-2003-11-19 21:23  davi
-
-	Initial code already working. Before freezing API, should think
-	whether it is worth to have a object for the parsed tree
+	* htmlcxx - html and css APIs for C++
 
