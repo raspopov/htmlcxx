@@ -8,6 +8,7 @@
 #define VERSION "0.6"
 #endif
 
+#include <cstdlib>
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
