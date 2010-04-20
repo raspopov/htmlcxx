@@ -3,7 +3,7 @@
 
 #AC_PREREQ(2.57)
 AC_INIT(htmlcxx.cc)
-AM_INIT_AUTOMAKE(htmlcxx, 0.83)
+AM_INIT_AUTOMAKE(htmlcxx, 0.84)
 AM_CONFIG_HEADER([config.h])
 AM_DISABLE_STATIC
 
@@ -37,4 +37,4 @@ AC_LANG_CPLUSPLUS
 CXXFLAGS="$CXXFLAGS -DDEFAULT_CSS=\"\\\"$datadir/htmlcxx/css/default.css\\\"\""
 
 AC_CONFIG_FILES([Makefile html/Makefile css/Makefile])
-AC_OUTPUT
+AC_OUTPUT(htmlcxx.pc)

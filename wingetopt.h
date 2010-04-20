@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-#ifndef WIN32
+#if !defined(WIN32) || defined(__MINGW32__)
 	#include <getopt.h>
 #else
 	#ifndef _GETOPT_

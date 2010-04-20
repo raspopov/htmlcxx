@@ -1,6 +1,8 @@
 #include <cctype>
 #include <cstring>
+#if !defined(WIN32) || defined(__MINGW32__)
 #include <strings.h>
+#endif
 
 //#define DEBUG
 //#include "debug.h"
@@ -292,7 +294,7 @@ void htmlcxx::HTML::ParserSax::parseHtmlTag(_Iterator b, _Iterator c)
 		{
 			if (tag_len == literal_mode_elem[i].len)
 			{
-				#ifdef WIN32
+                                #if defined(WIN32) && !defined(__MINGW32__)
 				if (!_stricmp(name.c_str(), literal_mode_elem[i].str))
 				#else
 				if (!strcasecmp(name.c_str(), literal_mode_elem[i].str))

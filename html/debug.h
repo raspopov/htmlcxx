@@ -4,17 +4,17 @@
 
 #ifdef __cplusplus
 #include <cstdio>
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 #include <cstring>
 #endif
 #else
 #include <stdio.h>
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 #include <string.h>
 #endif
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 #include <stdarg.h>
@@ -39,13 +39,13 @@ inline void dummyprintf(const char *format, ...)
 #endif
 
 #ifdef DEBUG
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 #define DEBUGP debugprintf
 #else
 #define DEBUGP(args...) do { fprintf(stderr, "%s:%d ", __FILE__, __LINE__); fprintf(stderr, ## args); } while(0)
 #endif
 #else
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 #define DEBUGP dummyprintf
 #else
 #define DEBUGP(args...)

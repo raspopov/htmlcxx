@@ -47,6 +47,8 @@ at this example.
 
   #include <htmlcxx/html/ParserDom.h>
   ...
+  using namespace std;
+  using namespace htmlcxx;
   
   //Parse some html code
   string html = "<html><body>hey</body></html>";
@@ -61,11 +63,11 @@ at this example.
   tree<HTML::Node>::iterator end = dom.end();
   for (; it != end; ++it)
   {
-  	if (it->tagName() == "A")
-  	{
-  		it->parseAttributes();
-  		cout << it->attributes("href");
-  	}
+     if (strcasecmp(it->tagName().c_str(), "A") == 0)
+     {
+       it->parseAttributes();
+       cout << it->attribute("href").second << endl;
+     }
   }
   
   //Dump all text of the document
@@ -73,11 +75,12 @@ at this example.
   end = dom.end();
   for (; it != end; ++it)
   {
-  	if ((!it->isTag()) && (!it->isComment()))
-  	{
-  		cout << it->text();
-  	}
+    if ((!it->isTag()) && (!it->isComment()))
+    {
+      cout << it->text();
+    }
   }
+  cout << endl;
 
 -------------------------------------------------
 
