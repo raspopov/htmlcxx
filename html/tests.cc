@@ -194,8 +194,11 @@ class CharsetTest
 	public:
 		void test()
 		{
-			CharsetConverter cc("8859_1", "UTF8");
+			CharsetConverter cc("UTF8", "ISO-8859-1");
 			myassert(cc.convert("VocÃª Ã© o meu visitante nÃºmero") == "Você é o meu visitante número");
+
+			CharsetConverter cc2("ISO-8859-1", "UTF8");
+			myassert(cc2.convert("Você é o meu visitante número") == "VocÃª Ã© o meu visitante nÃºmero");
 		}
 };
 
@@ -237,6 +240,9 @@ int main(int argc, char **argv) {
 
 	ParseAttrTest test3;
 	test3.test();
+
+    CharsetTest test4;
+    test4.test();
 	
 	return 0;
 }

@@ -17,7 +17,7 @@ AC_PROG_LIBTOOL
 # Checks for libraries.
 # Replace `main' with a function in -lfl:
 AC_CHECK_LIB(fl, main)
-
+AC_CHECK_LIB(iconv, iconv_open)
 
 
 # Checks for header files.
