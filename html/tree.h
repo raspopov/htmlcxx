@@ -46,6 +46,7 @@
 #define tree_hh_
 
 #include <cassert>
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <iterator>
